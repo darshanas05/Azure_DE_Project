@@ -2,9 +2,12 @@
 
 **Tech Stack:**
 
-**Azure Blob Storage:** Source for incoming CSV files and destination for processed files.
+**Azure Blob Storage Azure Data Lake Gen 2:** Source for incoming CSV files and destination for processed files.
+
 **Azure Data Factory:** Orchestration tool for managing the data pipeline.
+
 **Databricks:** Used for data processing and quality checks.
+
 **Azure Key Vault:** Securely stores secrets and credentials.
 
 
