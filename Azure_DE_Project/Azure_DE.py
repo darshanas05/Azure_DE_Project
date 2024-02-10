@@ -1,10 +1,15 @@
+#get the file name from the adf
+fileName = dbutils.widgets.get('fileName')
+fileNameWithoutExt = fileName.split('.')[0]
+print(fileNameWithoutExt)
+
 import pyspark.sql.functions as F
-#from datetime import datetme as dt
+
 
 #Just change all the values here based on the resource name you have created in your environemnt and workspace.
 
 stgAccountSASTokenKey = ''
-landingFileName =fileName #'Product'  #dbutils.widgets.get('Product')
+landingFileName =fileName 
 databricksScopeName =''
 storageContainer =''
 storageAccount=''
@@ -20,9 +25,9 @@ else:
 
 
 df1 = spark.read.csv('/mnt/landing/'+fileName, inferSchema=True, header=True)
-#display(df1)
+display(df1)
 
-# Rule 1
+# Rule
 errorFlag=False
 errorMessage = ''
 totalcount = df1.count()
@@ -34,21 +39,6 @@ if distinctCount !=totalcount:
     errorMessage = 'Duplication Found. Rule 1 Failed'
 print(errorMessage)
     
-# Rule 2
-df2 = df.filter(df.FileName==fileNameWithoutExt).select('ColumnName','ColumnDateFormat' )
-rows = df2.collect()
-for r in rows:
-    colName = r[0]
-    colFormat =r[1]
-    print(colName, colFormat)
-    #display(df1.filter(F.to_date(colName, colFormat).isNull() ==True))
-    formatCount =df1.filter(F.to_date(colName, colFormat).isNotNull() ==True).count()
-    if formatCount == totalcount:
-        errorFlag = True
-        errorMessage = errorMessage +' DateFormate is incorrect for {} '.format(colName)
-    else:
-        print('All rows are good for ', colName)
-print(errorMessage)
 
 if errorFlag:
     dbutils.fs.mv('/mnt/landing/'+fileName,'/mnt/rejected/'+fileName )
